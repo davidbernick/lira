@@ -12,7 +12,7 @@ task calc_expression {
     echo "Wrote qc matrix"
   }
   runtime {
-    docker: "gcr.io/broad-dsde-mint-dev/rsem"
+    docker: "dshiga/rsem"
     memory: "2 GB"
     disks: "local-disk 10 HDD"
   }
