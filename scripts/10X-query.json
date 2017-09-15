@@ -1,0 +1,23 @@
+{
+  "query": {
+    "bool": {
+      "must": [{
+        "match": {
+          "assay.single_cell.cell_handling": "10x_v2"
+        }
+      }, {
+        "match": {
+          "assay.rna.library_contruction": "10x_v2"
+        }
+      }, {
+        "match": {
+          "sample.donor.species.ontology": "9606"
+        }
+      }, {
+        "match": {
+          "assay.rna.spikein": "ERCC"
+        }
+      }]
+    }
+  }
+}

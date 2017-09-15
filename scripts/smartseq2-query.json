@@ -1,15 +1,32 @@
 {
   "query": {
     "bool": {
-        "must": [{
-            "match": {
-                "files.sample_json.donor.species": "Homo sapiens"
-            }
-        }, {
-            "match": {
-                "files.assay_json.single_cell.method": "Fluidigm C1"
-            }
-        }]
+      "must": [{
+        "match": {
+          "files.assay_json.rna.library_contruction": "smart-seq2"
+        }
+      }, {
+        "match": {
+          "files.assay_json.seq.paired_end": "yes"
+        }
+      }, {
+        "match": {
+          "files.sample.donor.species.ontology": "9606"
+        }
+      }, {
+        "match": {
+          "files.assay_json.rna.spikein": "ERCC"
+        }
+      }],
+      "should": [{
+        "match": {
+          "files.assay_json.single_cell.cell_handling": "FACs"
+        }
+      }, {
+        "match": {
+          "files.assay_json.single_cell.cell_handling": "mouth-pipetting"
+        }
+      }]
     }
   }
 }
