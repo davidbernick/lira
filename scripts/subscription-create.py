@@ -13,7 +13,7 @@ def prep_json(callback_base_url, listener_secret, query_json):
     query = None
     with open(query_json) as f:
         query = json.load(f)
-    js["query"] = query
+    js["es_query"] = query
 
     return js
 

@@ -3,19 +3,15 @@
     "bool": {
       "must": [{
         "match": {
-          "assay.single_cell.cell_handling": "10x_v2"
+          "files.assay_json.single_cell.cell_handling": "10x_v2"
         }
       }, {
         "match": {
-          "assay.rna.library_contruction": "10x_v2"
+          "files.assay_json.rna.library_construction": "10x_v2"
         }
       }, {
         "match": {
-          "sample.donor.species.ontology": "9606"
-        }
-      }, {
-        "match": {
-          "assay.rna.spikein": "ERCC"
+          "files.sample_json.donor.species.ontology": 9606
         }
       }]
     }

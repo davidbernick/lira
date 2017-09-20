@@ -3,19 +3,15 @@
     "bool": {
       "must": [{
         "match": {
-          "files.assay_json.rna.library_contruction": "smart-seq2"
+          "files.assay_json.rna.library_construction": "smart-seq2"
         }
       }, {
         "match": {
-          "files.assay_json.seq.paired_end": "yes"
+          "files.assay_json.seq.paired_ends": "yes"
         }
       }, {
         "match": {
-          "files.sample.donor.species.ontology": "9606"
-        }
-      }, {
-        "match": {
-          "files.assay_json.rna.spikein": "ERCC"
+          "files.sample_json.donor.species.ontology": 9606
         }
       }],
       "should": [{
