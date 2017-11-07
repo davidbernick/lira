@@ -52,9 +52,6 @@ def download_gcs_blob(gcs_client, bucket_name, source_blob_name):
     """
     logging.getLogger()
 
-    # Make sure the lazy property storage_client of gcs_client instance initialized at least once
-    if not gcs_client.storage_client:
-        gcs_client.storage_client
     authenticated_gcs_client = gcs_client.storage_client
 
     bucket = authenticated_gcs_client.bucket(bucket_name)
@@ -62,8 +59,8 @@ def download_gcs_blob(gcs_client, bucket_name, source_blob_name):
     return download_to_buffer(blob)
 
 
-class LazyProperty:
-    """This class implements a decorator for lazy-initializing class properties.
+class LazyProperty(object):
+    """This class implements a decorator for lazy-initializing class properties, it is Python2 compatible.
 
         Instead of implementing Singleton Pattern, this decorator accepts multiple
         instances of a class, meanwhile, implements lazy initialization of certain
@@ -80,11 +77,12 @@ class LazyProperty:
         else:
             val = self.func(instance)
             setattr(instance, self.func.__name__, val)
+            return val
 
 
-class GoogleCloudStorageClient:
+class GoogleCloudStorageClient(object):
     def __init__(self, key_location, scopes):
-        """This class implements the client to interact with Google Cloud Storage.
+        """This class implements the client to interact with Google Cloud Storage, it is Python2 compatible.
 
         :param str key_location: The location of Google Cloud Storage API key.
         :param list scopes: A list of OAuth 2.0 scopes information.
