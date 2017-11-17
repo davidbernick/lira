@@ -14,13 +14,13 @@ except ImportError:
     # if python2
     import mock
 
-from green_box_utils import gcs_utils
-from green_box_utils import cromwell_utils
-from green_box_utils import listener_utils
+from pipeline_tools import gcs_utils
+from lira import cromwell_utils
+from lira import utils as listener_utils
 
 
-pkg_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
-sys.path.insert(0, pkg_root)
+#pkg_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
+#sys.path.insert(0, pkg_root)
 
 
 def _make_credentials():

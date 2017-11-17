@@ -2,7 +2,9 @@
 import unittest
 import json
 from copy import deepcopy
-from green_box_utils import listener_utils
+from lira import utils as listener_utils
+import os
+import sys
 
 
 class TestStartupVerification(unittest.TestCase):
@@ -10,6 +12,9 @@ class TestStartupVerification(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """load the config file"""
+        # Change to test directory, as tests may have been invoked from another dir
+        dir = os.path.abspath(os.path.dirname(__file__))
+        os.chdir(dir)
         with open('config.json', 'rb') as f:
             cls.correct_test_config = json.load(f)
 
