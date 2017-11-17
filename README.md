@@ -17,6 +17,22 @@ Currently, the listener launches either a smartseq2 or 10x count workflow to pro
 4. Build the docker container: `bash build_docker.sh dev test`
 5. Run the docker container: `bash run_docker.sh dev test`
 
+### Run unit tests
+There are two ways to do this, with and without Docker.
+
+To run unit tests without building the docker image, you should create a virtual environment with the requirements for lira:
+
+```
+virtualenv test-env
+pip install -r requirements.txt
+```
+
+Then, from the root of the lira repo, do:
+```
+python -m unittest discover -v
+```
+This will run all of Lira's unit tests.
+
 ### Testing notifications locally
 To send a test notification to the listener:  
 1. Set the auth token: `auth=notification_token`  
