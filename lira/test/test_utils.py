@@ -3,8 +3,6 @@ import json
 import os
 import io
 import requests
-import requests_mock
-from six.moves import http_client
 import sys
 import unittest
 try:
@@ -15,42 +13,12 @@ except ImportError:
     import mock
 
 from pipeline_tools import gcs_utils
-from lira import cromwell_utils
 from lira import utils as listener_utils
-
-
-#pkg_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
-#sys.path.insert(0, pkg_root)
 
 
 def _make_credentials():
     import google.auth.credentials
     return mock.Mock(spec=google.auth.credentials.Credentials)
-
-
-def _make_response(status=http_client.OK, content=b'', headers=None):  # this is python3 style
-    headers = headers or {}
-    response = requests.Response()
-    response.status_code = status
-    response._content = content
-    response.headers = headers
-    response.request = requests.Request()
-    return response
-
-
-def _make_json_response(data, status=http_client.OK, headers=None):
-    headers = headers or {}
-    headers['Content-Type'] = 'application/json'
-    return _make_response(
-        status=status,
-        content=json.dumps(data).encode('utf-8'),
-        headers=headers)
-
-
-def _make_requests_session(responses):
-    session = mock.create_autospec(requests.Session, instance=True)
-    session.request.side_effect = responses
-    return session
 
 
 class TestUtils(unittest.TestCase):
@@ -123,30 +91,6 @@ class TestUtils(unittest.TestCase):
         inputs = listener_utils.compose_inputs('foo', 'bar', 'baz')
         self.assertEqual(inputs['foo.bundle_uuid'], 'bar')
         self.assertEqual(inputs['foo.bundle_version'], 'baz')
-
-    @requests_mock.mock()
-    def test_start_workflow(self, mock_request):
-        """This is a temporary unit test using mocks, to be replaced with an integration test later.
-        """
-        wdl_file = io.BytesIO(b"wdl_file")
-        zip_file = io.BytesIO(b"zip_file")
-        inputs_file = io.BytesIO(b"inputs_file")
-        inputs_file2 = io.BytesIO(b"inputs_file2")
-        options_file = io.BytesIO(b"options_file")
-        green_config = type('Config', (object,), {"cromwell_url": "http://cromwell_url",
-                                                  "cromwell_user": "cromwell_user",
-                                                  "cromwell_password": "cromwell_password"})
-
-        def _request_callback(request, context):
-            context.status_code = 200
-            context.headers['test'] = 'header'
-            return {'request': {'body': "content"}}
-
-        # Check request actions
-        mock_request.post(green_config.cromwell_url, json=_request_callback)
-        result = cromwell_utils.start_workflow(wdl_file, zip_file, inputs_file, inputs_file2, options_file, green_config)
-        self.assertEqual(result.status_code, 200)
-        self.assertEqual(result.headers.get('test'), 'header')
 
     def test_download_to_bytes_readable(self):
         """Test if download_to_buffer correctly download blob and store it into Bytes Buffer."""
