@@ -24,6 +24,7 @@ To run unit tests without building the docker image, you should create a virtual
 
 ```
 virtualenv test-env
+source test-env/bin/activate
 pip install -r requirements.txt
 ```
 
