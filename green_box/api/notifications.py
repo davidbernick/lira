@@ -6,7 +6,7 @@ from flask import current_app
 from green_box_utils import gcs_utils
 from green_box_utils import cromwell_utils
 from green_box_utils import listener_utils
-
+import read_utils
 
 def post(body):
     # Check authentication
@@ -30,34 +30,25 @@ def post(body):
             dict(error='Not Found: No wdl config found with subscription id {}'
                        ''.format(subscription_id)), 404)
     wdl = id_matches[0]
-
-    # Prepare inputs
-    inputs = listener_utils.compose_inputs(wdl.workflow_name, uuid, version)
-    with open('cromwell_inputs.json', 'w') as f:
-        json.dump(inputs, f)
-
-    # Start workflow
     logger.info(wdl)
     logger.info('Launching {0} workflow in Cromwell'.format(wdl.workflow_name))
 
-    # TODO: Parse bucket at initialization time in config class, throw an error if malformed.
-    # get filenames from links
-    bucket_name, wdl_file = gcs_utils.parse_bucket_blob_from_gs_link(wdl.wdl_link)
-    _, wdl_default_inputs_file = gcs_utils.parse_bucket_blob_from_gs_link(wdl.wdl_default_inputs_link)
-    _, wdl_deps_file = gcs_utils.parse_bucket_blob_from_gs_link(wdl.wdl_deps_link)
-    _, options_file = gcs_utils.parse_bucket_blob_from_gs_link(wdl.options_link)
+    # Prepare inputs
+    inputs = listener_utils.compose_inputs(wdl.workflow_name, uuid, version)
+    cromwell_inputs_file = json.dumps(inputs)
 
-    # Get files from gcs and store in Bytes Buffer
-    gcs_client = current_app.gcs_client
-    wdl_file = gcs_utils.download_gcs_blob(gcs_client, bucket_name, wdl_file)
-    wdl_default_inputs_file = gcs_utils.download_gcs_blob(gcs_client, bucket_name, wdl_default_inputs_file)
-    wdl_deps_file = gcs_utils.download_gcs_blob(gcs_client, bucket_name, wdl_deps_file)
-    options_file = gcs_utils.download_gcs_blob(gcs_client, bucket_name, options_file)
+    # Read files into memory
+    wdl_file = read_utils.download(wdl.wdl_link)
+    wdl_default_inputs_file = read_utils.download(wdl.wdl_default_inputs_link)
+    options_file = read_utils.download(wdl.options_link)
 
-    with open('cromwell_inputs.json') as cromwell_inputs_file:
-        cromwell_response = cromwell_utils.start_workflow(
-            wdl_file, wdl_deps_file, cromwell_inputs_file,
-            wdl_default_inputs_file, options_file, green_config)
+    # Create zip of analysis and submit wdls
+    url_to_contents = read_utils.download_to_map([wdl.analysis_wdl, green_config.submit_wdl])
+    wdl_deps_file = read_utils.make_zip(url_to_contents)
+
+    cromwell_response = cromwell_utils.start_workflow(
+        wdl_file, wdl_deps_file, cromwell_inputs_file,
+        wdl_default_inputs_file, options_file, green_config)
 
     # Respond
     if cromwell_response.status_code > 201:
