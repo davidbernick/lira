@@ -34,7 +34,7 @@ def post(body):
     logger.info('Launching {0} workflow in Cromwell'.format(wdl.workflow_name))
 
     # Prepare inputs
-    inputs = listener_utils.compose_inputs(wdl.workflow_name, uuid, version)
+    inputs = listener_utils.compose_inputs(wdl.workflow_name, uuid, version, green_config.env)
     cromwell_inputs_file = json.dumps(inputs)
 
     # Read files into memory

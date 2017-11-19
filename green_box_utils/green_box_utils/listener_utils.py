@@ -43,7 +43,7 @@ def extract_uuid_version_subscription_id(msg):
     return uuid, version, subscription_id
 
 
-def compose_inputs(workflow_name, uuid, version):
+def compose_inputs(workflow_name, uuid, version, env):
     """Create Cromwell inputs file containing bundle uuid and version.
 
     :param str workflow_name: The name of the workflow.
@@ -52,7 +52,8 @@ def compose_inputs(workflow_name, uuid, version):
     :return dict: A dictionary of workflow inputs.
     """
     return {workflow_name + '.bundle_uuid': uuid,
-            workflow_name + '.bundle_version': str(version)}
+            workflow_name + '.bundle_version': str(version),
+            workflow_name + '.runtime_environment': env}
 
 
 class Config:
@@ -137,7 +138,6 @@ class WdlConfig(Config):
             'subscription_id',
             'wdl_link',
             'workflow_name',
-            'wdl_deps_link',
             'wdl_default_inputs_link',
             'options_link'
         }

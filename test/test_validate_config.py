@@ -42,8 +42,6 @@ class TestStartupVerification(unittest.TestCase):
         self.assertRaises(ValueError, listener_utils.ListenerConfig, mangled_config)
         mangled_config = delete_wdl_field('wdl_default_inputs_link')
         self.assertRaises(ValueError, listener_utils.ListenerConfig, mangled_config)
-        mangled_config = delete_wdl_field('wdl_deps_link')
-        self.assertRaises(ValueError, listener_utils.ListenerConfig, mangled_config)
 
     def test_config_duplicate_wdl_raises_value_error(self):
 
@@ -70,7 +68,7 @@ class TestStartupVerification(unittest.TestCase):
         wdl = config.wdls[0]
         requested_wdl_attributes = [
             'subscription_id', 'wdl_link', 'workflow_name', 'wdl_default_inputs_link',
-            'wdl_deps_link', 'options_link']
+            'options_link']
         for attr in requested_wdl_attributes:
             self.assertTrue(hasattr(wdl, attr), 'missing attribute %s' % attr)
 

@@ -5,7 +5,6 @@ import requests
 import zipfile
 from StringIO import StringIO
 
-
 def download_to_map(urls):
     """
     Reads contents from each url into memory and returns a
@@ -29,7 +28,9 @@ def make_zip(url_to_contents):
         for url, contents in url_to_contents.items():
             name = url.split('/')[-1]
             zip_buffer.writestr(name, contents)
-    return buf
+
+    bytes_buf = io.BytesIO(buf.getvalue())
+    return bytes_buf
 
 
 def download(url):
