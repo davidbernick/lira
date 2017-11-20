@@ -49,6 +49,7 @@ def compose_inputs(workflow_name, uuid, version, env):
     :param str workflow_name: The name of the workflow.
     :param str uuid: uuid of the bundle.
     :param str version: version of the bundle.
+    :param str env: Runtime environment, e.g. 'dev'
     :return dict: A dictionary of workflow inputs.
     """
     return {workflow_name + '.bundle_uuid': uuid,
