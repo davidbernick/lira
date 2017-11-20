@@ -120,9 +120,10 @@ class TestUtils(unittest.TestCase):
 
     def test_compose_inputs(self):
         """Test if compose_inputs can correctly create Cromwell inputs file containing bundle uuid and version"""
-        inputs = listener_utils.compose_inputs('foo', 'bar', 'baz')
+        inputs = listener_utils.compose_inputs('foo', 'bar', 'baz', 'dev')
         self.assertEqual(inputs['foo.bundle_uuid'], 'bar')
         self.assertEqual(inputs['foo.bundle_version'], 'baz')
+        self.assertEqual(inputs['foo.runtime_environment'], 'dev')
 
     @requests_mock.mock()
     def test_start_workflow(self, mock_request):
