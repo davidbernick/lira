@@ -34,6 +34,13 @@ python -m unittest discover -v
 ```
 This will run all of Lira's unit tests.
 
+You can also run the unit tests from inside the docker image, if you don't want to create a virtualenv.
+You can do this by running:
+```
+cd lira/test
+bash test.sh
+```
+
 ### Testing notifications locally
 To send a test notification to the listener:  
 1. Set the auth token: `auth=notification_token`  
